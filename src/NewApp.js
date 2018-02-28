@@ -1,19 +1,72 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
+import { Route } from 'react-router-dom'
+import * as BooksAPI from './BooksAPI'
 import './App.css'
-import * as books from './BooksAPI.js'
-let bookTest = books.getAll()
-console.log(bookTest)
+import Shelf from './Shelf'
+
+
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false
+    library: []
+  }
+
+  componentDidMount() {
+    BooksAPI.getAll().then((library) => {
+      this.setState({library});
+    })
+  }
+
+  updateBooks(newBook) {
+    let books = this.state.library.filter((book) => {
+      book.id !== newBook.id;
+    })
+    books.append(newBook);
+    this.setState({library: books})
   }
 
   render() {
+
+    let booksCurrent = [],
+        booksWant = [],
+        booksRead = [];
+    this.state.library.map((book) => {
+      switch(book.shelf) {
+        case 'currentlyReading':
+          booksCurrent.append(book);
+        case 'wantToRead':
+          booksWant.append(book);
+        case 'read':
+          booksRead.append(book);
+        default:
+      }
+    });
+    let shelves = {
+      {books: booksCurrent, title: 'Currently Reading'},
+      {books: booksWant, title: 'Want to Read'},
+      {books: booksRead, title: 'Read'}
+    };
+
     return (
+      <div className="app">
+        <Route path='/search' render={() => (
+          <Search
+            onSelect={this.updateBooks}
+            getBooks={BooksAPI.search}
+        )}/>
+
+        <Route exact path='/' render={() => (
+          <div className="list-books">
+            <div className="list-books-title">
+              <h1>MyReads</h1>
+            </div>
+            <div className="list-books-content">
+              <div>
+                {shelves.map((shelf) => (<Bookshelf books={shelf.books} title={shelf.title} onSelect={this.updateBooks} />))}
+              </div>
+            </div>
+          </div>
+        )}/>
+      </div>
+    )
+  }
+}
