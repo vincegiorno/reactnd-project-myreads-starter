@@ -21,6 +21,7 @@ class BooksApp extends React.Component {
       book.id !== newBook.id;
     })
     books.append(newBook);
+    BooksAPI.update(book, book.shelf)
     this.setState({library: books})
   }
 
@@ -61,7 +62,7 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                {shelves.map((shelf) => (<Bookshelf books={shelf.books} title={shelf.title} onSelect={this.updateBooks} />))}
+                {shelves.map((shelf) => (<Bookshelf books={shelf.books} title={shelf.title} changeShelf={this.updateBooks} />))}
               </div>
             </div>
           </div>
