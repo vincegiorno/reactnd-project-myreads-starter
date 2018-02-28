@@ -1,7 +1,9 @@
 import React from 'react'
 // import * as BooksAPI from './BooksAPI'
 import './App.css'
-
+import * as books from './BooksAPI.js'
+let bookTest = books.getAll()
+console.log(bookTest)
 class BooksApp extends React.Component {
   state = {
     /**
