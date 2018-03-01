@@ -3,9 +3,13 @@ import './App.css';
 
 class Book extends Component {
 
+  state = {
+    shelf: this.props.book.shelf
+  };
+
   bookChanger = (e) => {
-    let newShelf = e.target.value;
-    this.props.changeShelf(this.props.book, newShelf);
+    this.setState({shelf: e.target.value});
+    this.props.changeShelf(this.props.book, e.target.value);
   }
   render() {
     return (
@@ -17,7 +21,7 @@ class Book extends Component {
                 alt='Cover'/>
             </div>
             <div className="book-shelf-changer">
-              <select onChange={this.bookChanger}>
+              <select onChange={this.bookChanger} value={this.state.shelf}>
                 <option value="none" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>

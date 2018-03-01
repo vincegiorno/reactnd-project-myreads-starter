@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import Shelf from './Shelf'
@@ -21,8 +21,8 @@ class BooksApp extends React.Component {
     let books = this.state.library.filter((book) => book.id !== newBook.id);
     newBook.shelf = shelf;
     books.push(newBook);
-    BooksAPI.update(newBook, shelf)
-    this.setState({library: books})
+    BooksAPI.update(newBook, shelf);
+    this.setState({library: books});
   }
 
   render() {
@@ -40,8 +40,7 @@ class BooksApp extends React.Component {
       <div className="app">
         <Route path='/search' render={() => (
           <Search
-            onSelect={this.updateBooks}
-            getBooks={BooksAPI.search}
+            putOnShelf={this.updateBooks.bind(this)}
           />
         )} />
 
@@ -53,8 +52,12 @@ class BooksApp extends React.Component {
             <div className="list-books-content">
               <div>
                 {shelves.map((shelf) => (<Shelf books={shelf.books}
-                  key={shelf.title} title={shelf.title} changeShelf={this.updateBooks.bind(this)} />))}
+                  key={shelf.title} title={shelf.title} hidden={false}
+                  changeShelf={this.updateBooks.bind(this)} />))}
               </div>
+            </div>
+            <div className="open-search">
+              <Link to='/search'>Add a book</Link>
             </div>
           </div>
         )}/>
