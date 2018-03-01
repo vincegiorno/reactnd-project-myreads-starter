@@ -1,21 +1,23 @@
 import React, { Component} from 'react';
-import './App.css'
+import './App.css';
 
 class Book extends Component {
 
-  const {book, changeShelf} = this.props;
   bookChanger = (e) => {
-    book.shelf = e.target.value;
-    changeShelf(book);
+    let newShelf = e.target.value;
+    this.props.changeShelf(this.props.book, newShelf);
   }
-  render {
-    return(
+  render() {
+    return (
       <li>
         <div className="book">
           <div className="book-top">
-            <div className="book-cover" style={{ backgroundImage: {book.imageLinks.thnumbnail}}}></div>
+            <div className="book-cover">
+              <img src={this.props.book.imageLinks.thumbnail}
+                alt='Cover'/>
+            </div>
             <div className="book-shelf-changer">
-              <select onchange={bookChanger}>
+              <select onChange={this.bookChanger}>
                 <option value="none" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
@@ -24,10 +26,12 @@ class Book extends Component {
               </select>
             </div>
           </div>
-          <div className="book-title">To Kill a Mockingbird</div>
-          <div className="book-authors">Harper Lee</div>
+          <div className="book-title">{this.props.book.title}</div>
+          <div className="book-authors">{this.props.book.authors}</div>
         </div>
       </li>
     )
   }
 }
+
+export default Book
